@@ -1,5 +1,5 @@
-import { testGame } from "@replay/test";
-import { WebInputs } from "@replay/web";
+import { testSprite } from "@replay/test";
+import { WebInputs, mapInputCoordinates } from "@replay/web";
 import { iOSInputs } from "@replay/swift";
 import { Game, gameProps } from "..";
 
@@ -20,13 +20,14 @@ test("gameplay", () => {
     updateInputs,
     getTexture,
     audio,
-  } = testGame(Game(gameProps), { initInputs });
-
-  expect(getTexture("icon").props.position).toEqual({
-    x: 0,
-    y: 0,
-    rotation: 0,
+  } = testSprite(Game(gameProps), gameProps, {
+    initInputs,
+    mapInputCoordinates,
   });
+
+  expect(getTexture("icon").props.x).toBe(0);
+  expect(getTexture("icon").props.y).toBe(0);
+  expect(getTexture("icon").props.rotation).toBe(0);
 
   updateInputs({
     pointer: {
@@ -44,9 +45,9 @@ test("gameplay", () => {
 
   expect(audio.play).toBeCalledWith("boop.wav");
 
-  jumpToFrame(() => getTexture("icon").props.position.x > 99.99);
+  jumpToFrame(() => getTexture("icon").props.x > 99.99);
 
-  expect(getTexture("icon").props.position.y).toBeCloseTo(100);
+  expect(getTexture("icon").props.y).toBeCloseTo(100);
 
   expect(audio.play).toHaveBeenCalledTimes(1);
 });
