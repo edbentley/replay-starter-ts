@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -7,11 +8,21 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: [
+          {
+            loader: "ts-loader",
+            options: { transpileOnly: true },
+          },
+        ],
         exclude: /node_modules/,
       },
     ],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      PLATFORM: JSON.stringify("ios"),
+    }),
+  ],
   resolve: {
     extensions: [".tsx", ".ts", ".js"],
   },
